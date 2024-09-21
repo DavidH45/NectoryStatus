@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title><%= config.PageSettings.Name %></title>
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+      <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+      <script src="https://cdn.tailwindcss.com"></script>
+      <link rel="icon" href="<%= config.PageSettings.Logo %>" type="image/png">
+      <meta property="og:title" content="<%= config.PageSettings.Name %>" />
+      <meta property="og:type" content="website" />
+      <meta property="og:url" content="<%= config.PageSettings.URL %>" />
+      <meta property="og:image" content="<%= config.PageSettings.Logo %>" />
+      <meta property="og:description" content="<%= config.PageSettings.Description %>" />
+      <meta name="theme-color" content="<%= config.PageSettings.ThemeColor %>">
+      <style>
+         body {
+         font-family: "Montserrat", sans-serif;
+         background-color: #121212;
+         color: #FFFFFF;
+         margin: 0;
+         display: flex;
+         align-items: center;
+         justify-content: center;
+         min-height: 100vh;
+         overflow: hidden;
+         }
+         .container.is-fluid {
+         display: flex;
+         align-items: center;
+         justify-content: center;
+         width: 100%;
+         max-width: 100%;
+         padding: 2rem;
+         box-sizing: border-box;
+         }
+         .status-container {
+         background-color: #1E1E1E;
+         border-radius: 8px;
+         padding: 2rem;
+         width: 100%;
+         max-width: 800px;
+         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+         overflow-y: auto;
+         overflow-x: hidden;
+         overflow: visible;
+         border: 4px solid <%= config.PageSettings.ThemeColor %>;
+         box-shadow: 0 0 5px <%= config.PageSettings.ThemeColor %>;
+         }
+         .status-container::-webkit-scrollbar {
+         width: 12px;
+         }
+         .status-container::-webkit-scrollbar-track {
+         background: #2a2a2a;
+         border-radius: 10px;
+         }
+         .status-container::-webkit-scrollbar-thumb {
+         background-color: #b0b0b0;
+         border-radius: 10px;
+         border: 3px solid #2a2a2a;
+         }
+         .status-container {
+         scrollbar-width: thin;
+         scrollbar-color: #b0b0b0 #2a2a2a;
+         }
+         .status-header {
+         text-align: center;
+         margin-bottom: 2rem;
+         position: relative;
+         }
+         .status-header .icon {
+         font-size: 3rem;
+         margin-bottom: 1rem;
+         }
+         .status-header .title {
+         font-size: 2rem;
+         }
+         .status-header .subtitle {
+         font-size: 1rem;
+         color: #B0B0B0;
+         }
+         .status-box {
+         border-bottom: 1px solid #333;
+         padding: 1rem 0;
+         }
+         .status-box:last-child {
+         border-bottom: none;
+         }
+         .service-name {
+         font-size: 1.2rem;
+         margin-bottom: 0.5rem;
+         display: flex;
+         align-items: center;
+         }
+         .pulsating-dot {
+         width: 10px;
+         height: 10px;
+         border-radius: 50%;
+         margin-right: 8px;
+         animation: pulsate 1.5s infinite;
+         flex-shrink: 0;
+         }
+         /* Add this keyframe animation for pulsating effect */
+         @keyframes pulsate {
+         0% {
+         transform: scale(1);
+         opacity: 1;
+         }
+         50% {
+         transform: scale(1.2);
+         opacity: 0.6;
+         }
+         100% {
+         transform: scale(1);
+         opacity: 1;
+         }
+         }
+         .service-status {
+         display: flex;
+         align-items: center;
+         justify-content: space-between;
+         }
+         .service-status span {
+         font-size: 0.9rem;
+         }
+         .uptime-bar {
+         height: 8px;
+         background-color: <%= config.StatusColors.Online %>;
+         margin-top: 0.5rem;
+         border-radius: 4px;
+         }
+         .uptime-percentage {
+         font-size: 0.9rem;
+         color: #B0B0B0;
+         text-align: right;
+         }
+         .history-bar {
+         display: flex;
+         margin-top: 1rem;
+         flex-wrap: wrap;
+         gap: 2px;
+         }
+         .history-bar .day-box {
+         width: 6.1px;
+         height: 20px;
+         border-radius: 4px;
+         background-color: <%= config.StatusColors.Online %>;
+         position: relative;
+         }
+         .history-bar .day-box.offline {
+         background-color: <%= config.StatusColors.Offline %>;
+         }
+         .history-bar .day-box.maintenance {
+         background-color: <%= config.StatusColors.Maintenance %>;
+         }
+         .history-bar .day-box.placeholder {
+         background-color: #757575;
+         }
+         .history-bar .day-box:hover .tooltip {
+         visibility: visible;
+         opacity: 1;
+         }
+         .day-box {
+         position: relative;
+         }
+         .tooltip {
+         position: absolute;
+         bottom: 120%;
+         left: 50%;
+         transform: translateX(-50%);
+         z-index: 1000;
+         visibility: hidden;
+         background-color: #333;
+         color: #fff;
+         text-align: center;
+         border-radius: 4px;
+         padding: 5px;
+         font-size: 0.75rem;
+         white-space: nowrap;
+         max-width: 300px;
+         word-wrap: break-word;
+         opacity: 0;
+         transition: opacity 0.3s;
+         }
+         .tooltip::after {
+         content: "";
+         position: absolute;
+         top: 100%;
+         left: 50%;
+         margin-left: -5px;
+         border-width: 5px;
+         border-style: solid;
+         border-color: #333 transparent transparent transparent;
+         }
+         .tooltip-left {
+         left: auto;
+         right: 50%;
+         transform: translateX(50%);
+         }
+         .tooltip-left::after {
+         left: auto;
+         right: 50%;
+         margin-left: 0;
+         margin-right: -5px;
+         }
+         @media (max-width: 865px) {
+         .history-bar {
+         flex-wrap: nowrap;
+         overflow-x: auto;
+         padding-bottom: 10px;
+         }
+         .history-bar .day-box {
+         flex: 0 0 auto;
+         }
+         }
+         .status-header .icon.maintenance {
+         animation: glowing-orange 1.5s infinite;
+         }
+         .status-box.maintenance {
+         border-bottom: 1px solid #333
+         }
+         .history-bar .day-box.maintenance {
+         background-color: <%= config.StatusColors.Maintenance %>;
+         }
+         .question-mark {
+         font-size: 0.8rem;
+         color: #B0B0B0;
+         margin-left: 0.5rem;
+         cursor: pointer;
+         position: relative;
+         }
+         .question-mark .tooltip {
+         bottom: 100%;
+         left: 50%;
+         transform: translateX(-50%);
+         margin-bottom: 5px;
+         }
+         .question-mark:focus .tooltip,
+         .question-mark:active .tooltip,
+         .question-mark:hover .tooltip {
+         visibility: visible;
+         opacity: 1;
+         }
+      </style>
+   </head>
+   <body>
+      <div class="">
+         <div class="m-6 p-8 rounded-xl border border-black/15 duration-200 ease-in-out hover:bg-gray-200/50 motion-reduce:transition-none dark:border-neutral-800 dark:bg-[#161617] dark:hover:border-neutral-700 dark:hover:bg-[#202021]">
+            <div class="status-header">
+               <i class="<%= statusIcon %> icon <%= statusClass %>" style="color: <%= statusColor %>; font-weight: 900;"></i>
+               <h1 class="title" style="color: <%= statusColor %>; font-weight: 800;"><%= overallStatus %></h1>
+               <p class="subtitle">Last updated <span id="last-updated"><%= getRelativeTime(lastUpdated) %></span></p>
+            </div>
+            <div>
+               <% services.forEach(service => { %>
+               <div class="status-box <%= service.status === 'maintenance' ? 'maintenance' : '' %>">
+                  <div class="service-status self-end">
+                     <div class="service-name self-end">
+                        <div class="pulsating-dot" style="background-color: <%= service.status === 'online' ? config.StatusColors.Online : (service.status === 'maintenance' ? config.StatusColors.Maintenance : config.StatusColors.Offline) %>;"></div>
+                        <span style="font-weight: 700;"><%= service.name %></span>
+                        <div class="question-mark" tabindex="0">
+                           <i class="fas fa-question-circle"></i>
+                           <div class="tooltip"><%= service.tooltip %></div>
+                        </div>
+                     </div>
+                     <span target="_blank" aria-label="JavaScript search" class="my-1 flex w-max content-center items-center rounded-lg border-2 border-transparent bg-black/5 px-[0.5em] py-[0.12em] text-[88%] text-gray-800/60 duration-200 hover:bg-black/10 motion-reduce:transition-none dark:bg-white/10 dark:text-white/70 dark:hover:bg-white/20" href="https://github.com/DavidH45/Hue-Lights-Manager/search?l=JavaScript" style="font-weight: 700; background-color: <%= service.status === 'online' ? config.StatusColors.Online : (service.status === 'maintenance' ? config.StatusColors.Maintenance : config.StatusColors.Offline) %>"><%= service.status === 'maintenance' ? 'Maintenance' : service.status.charAt(0).toUpperCase() + service.status.slice(1) %></span>
+                  </div>
+                  <div class="uptime-bar" style="background-color: <%= service.status === 'online' ? config.StatusColors.Online : (service.status === 'maintenance' ? config.StatusColors.Maintenance : config.StatusColors.Offline) %>;"></div>
+                  <div class="history-bar">
+                     <% service.history.forEach(day => { %>
+                     <div class="day-box <%= day.status === 'offline' ? 'offline' : (day.status === 'maintenance' ? 'maintenance' : day.status === 'placeholder' ? 'placeholder' : '') %>">
+                        <div class="tooltip">
+                           <%= day.date !== 'N/A' ? `${new Date(day.date).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })} - ${day.status}` : 'No Data Available' %>
+                           <% if (day.status === 'offline') { %>
+                           <br>Offline for <%= Math.floor(day.durations.reduce((a, b) => a + b, 0) / 3600) %> hours, <%= Math.floor(day.durations.reduce((a, b) => a + b, 0) % 3600 / 60) %> minutes
+                           <% } %>
+                        </div>
+                     </div>
+                     <% }); %>
+                  </div>
+                  <div class="uptime-percentage" style="font-weight: 500;">Uptime: <%= service.uptimePercentage %>%</div>
+               </div>
+               <% }); %>
+            </div>
+            <div class="pt-2"><a href="https://davidh.website" class="rounded-lg bg-black/10 px-2 py-1 text-xs dark:bg-white/10 hover:text-white">Created by davidh.website</a></div>
+         </div>
+      </div>
+   </body>
+</html>

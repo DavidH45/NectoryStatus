@@ -1,0 +1,71 @@
+# Nectory Status Configuration
+DebugMode: true
+
+# Status Page
+PageSettings:
+  Name: "Nectory Status"
+  Logo: "https://i.imgur.com/v9plHJe.png"
+  ThemeColor: "#11E3FE"
+  Description: "Nectory Status | Open source status page"
+  Port: 3000
+  updateInterval: 3m
+
+# Services
+
+# You can check the status of the following types:
+# - website
+# - ip
+# - minecraft
+# - tcp
+# - udp
+
+services:
+  - name: "Example Website"
+    url: "https://davidh.website"
+    webhookURL: "WEBHOOK_URL"
+    maintenance: false
+    type: "website"
+    tooltip: "The davidh.website check." # Leave blank to disable
+
+  - name: "Example Dedicated Server"
+    url: "8.8.8.8"
+    webhookURL: "WEBHOOK_URL"
+    maintenance: false
+    type: "ip"
+    tooltip: "Server Check." # Leave blank to disable
+
+  - name: "Example Minecraft Server"
+    url: "mc.hypixel.net"
+    webhookURL: "WEBHOOK_URL"
+    maintenance: false
+    type: "minecraft"
+    tooltip: "Hypixel Minecraft server." # Leave blank to disable
+
+# Status Colors
+StatusColors:
+  Online: "#4CAF50"
+  Offline: "#F44336"
+  PartialOffline: "#E67E22"
+  Maintenance: "#E67E22"
+
+# Webhook Messages
+WebhookMessages:
+  Online:
+    Title: "Status Update"
+    Description: |
+      - Service: ``{{serviceName}}``
+      - Status: ``Online``
+
+      **Downtime Details:**
+      - Went offline: <t:{{lastOfflineTimestamp}}:F>
+      - Back online: <t:{{currentTimestamp}}:F>
+      - Downtime duration: ``{{formattedDuration}}``
+
+  Offline:
+    Title: "Status Update"
+    Description: |
+      - Service: ``{{serviceName}}``
+      - Status: ``Offline``
+
+      **Details:**
+      - Went offline: <t:{{currentTimestamp}}:F>
