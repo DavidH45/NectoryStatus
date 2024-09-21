@@ -1,5 +1,5 @@
 # Nectory Status Configuration
-DebugMode: true
+DebugMode: false
 
 # Status Page
 PageSettings:
